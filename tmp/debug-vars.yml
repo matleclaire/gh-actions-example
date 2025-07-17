@@ -11,13 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MY_VAR: "🟤 Job Level Value"
-      MY_VAR2: "Job Level variable"
 
     steps:
       - name: Print the Variable
         env:
           MY_VAR: "🟡 Step Level Value"
-          MY_VAR2: "Step Level variable"
         run: echo "MY_VAR is $MY_VAR" # What do we print?
 
       - name: Print the Variable again
@@ -27,12 +25,12 @@ jobs:
         run: |
           echo "MY_VAR=Overridden via GITHUB_ENV" >> $GITHUB_ENV
 
+      - name: Print env context
+        run: echo "${{toJson(env)}}"  
+    
       - name: Print the final value
         run: echo "Final MY_VAR value is $MY_VAR"  # And there?
 
       - name: Print Secret-Based Variable
         run:
           echo "Final Secret Value is ${{ secrets.MY_VAR }}"  # And there?
-
-      - name: Print the final value for MY_VAR2
-        run: echo "Final MY_VAR2 value is $MY_VAR2"

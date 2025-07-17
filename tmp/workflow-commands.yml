@@ -1,3 +1,7 @@
+## This workflow shows how to use workflow commands.
+##
+## More details on https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions
+
 name: Workflow Commands
 on:
   workflow_dispatch:
@@ -32,7 +36,7 @@ jobs:
         run: echo "The output was ${{ steps.example_step.outputs.result }}"
       # Toolkit functions
       - name: Create messages
-        run: |
+        run: | 
           echo "::debug::This is a debug Message"
           echo "::notice::This is a notice Message"
           echo "::warning::This is a warning Message"
@@ -51,6 +55,6 @@ jobs:
     needs: job1
     steps:
       - name: Use the outputs from job1
-        run: |
+        run: | 
           echo "The output1 from job1 was ${{ needs.job1.outputs.output1 }}"
           echo "The output2 from job1 was ${{ needs.job1.outputs.output2 }}"

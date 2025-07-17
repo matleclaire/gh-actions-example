@@ -1,0 +1,15 @@
+name: Add Label to PR
+on:
+  pull_request:
+    types: [opened]
+jobs:
+  add-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Try to add label
+        run: |
+          gh pr edit ${{ github.event.pull_request.number }} -- add-label "needs-review"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}

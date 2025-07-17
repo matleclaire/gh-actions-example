@@ -1,0 +1,10 @@
+on:
+  issues:
+    types:
+      - opened
+      - labeled
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Congratz you created a new issue"

@@ -1,0 +1,75 @@
+## This workflow shows how to use conditional executions on context
+##
+## Exercise Goal:
+## The workflow below contains intentional mistakes or missing logic.
+## Your task is to fix it so that:
+##
+## ✅ Jobs run only on the appropriate branches
+## ✅ Each job runs in the correct order using 'needs'
+## ✅ Conditional logic is used with the correct GitHub context values
+## ✅ CVE scanning runs on main, feature/* and bugfix/* branches only
+## ✅ Deployment runs ONLY on the main branch, and only after a successful CVE scan
+
+name: CI Workflow Exercise
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        run: echo "🛠️ Building the project..."
+      - run: |
+          echo "github.ref ${{ github.ref }}"
+
+  # ℹ️ Must run after 'build'
+  # ℹ️ Should run only for: main, feature/* and bugfix/*
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    if: |
+      github.ref == 'refs/heads/main' ||
+      startsWith(github.ref, 'refs/heads/feature/') ||
+      startsWith(github.ref, 'refs/heads/bugfix/')
+    steps:
+      - name: Run Tests
+        run: echo "✅ Testing on ${{ github.ref }}"
+
+  # ℹ️ Must run after 'build'
+  # ℹ️ Should run only for branches starting with 'bugfix/'
+  bugfix-check:
+    runs-on: ubuntu-latest
+    needs: build
+    if: startsWith(github.ref, 'refs/heads/bugfix/')
+    steps:
+      - name: Run Bugfix Validation
+        run: echo "🕵️ Bugfix validation for ${{ github.ref }}"
+
+  # ℹ️ Must run after 'test'
+  # ℹ️ Should run only for: main, feature/* and bugfix/*
+  cve-scan:
+    runs-on: ubuntu-latest
+    needs: test
+    if: |                                     # 🔧 This is incorrect — fix it!
+      github.ref == 'refs/heads/main' ||
+      startsWith(github.ref, 'refs/heads/feature/') ||
+      startsWith(github.ref, 'refs/heads/bugfix/')
+    steps:
+      - name: CVE Scan
+        run: echo "🛡️ Scanning dependencies..."
+
+  # ℹ️ Must run only after CVE scan
+  # ℹ️ Should run only for the 'main' branch
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [cve-scan]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy
+        run: echo "🚀 Deploying ${{ github.ref }}"
