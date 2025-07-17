@@ -36,7 +36,7 @@ jobs:
           echo "Final Secret Value is ${{ secrets.MY_VAR }}"  # And there?
 
       - name: Print the final value for MY_VAR2
-        run: echo "Final MY_VAR2 value is MY_VAR2"
+        run: echo "Final MY_VAR2 value is $MY_VAR2"
 
       - name: Print the final value for MY_VAR3
-        run: echo "Final MY_VAR3 value is MY_VAR3"
+        run: echo "Final MY_VAR3 value is $MY_VAR3"
