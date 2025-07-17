@@ -1,6 +1,8 @@
 name: Greetings Workflow
 
-on: [issues]
+on:
+  issues:
+    types: opened
 jobs:
   greet:
     runs-on: ubuntu-latest
