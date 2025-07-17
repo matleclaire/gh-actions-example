@@ -1,0 +1,56 @@
+name: Workflow Commands
+on:
+  workflow_dispatch:
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      output1: ${{ steps.example_step.outputs.result }}
+      output2: ${{ steps.sets-a-secret.outputs.secret-number }}
+
+    steps:
+      # ENV Vars
+      - name: Set the value in env vars
+        run: echo "action_state=yellow" >> $GITHUB_ENV
+      - name: Use the value from env vars
+        run: printf '%s\n' "$action_state" # This will output 'yellow'
+      # Grouping messages
+      - name: Grouping messages
+        run: |
+          echo "::group::This is a grouped message"
+          echo "This is the content of the group"
+          echo "And a new line"
+          echo "And another line"
+          echo "::endgroup::"
+      # Output
+      - name: Set output
+        id: example_step
+        run: echo "result=output_value" >> $GITHUB_OUTPUT
+      - name: Use output
+        run: echo "The output was ${{ steps.example_step.outputs.result }}"
+      # Toolkit functions
+      - name: Create messages
+        run: |
+          echo "::debug::This is a debug Message"
+          echo "::notice::This is a notice Message"
+          echo "::warning::This is a warning Message"
+          echo "::error::This is an error Message"
+      - id: sets-a-secret
+        name: Generate, mask, and output a secret
+        run: |
+          the_secret=$((RANDOM))
+          echo "::add-mask::$the_secret"
+          echo "secret-number=$the_secret" >> "$GITHUB_OUTPUT"
+      - name: Print the secret output (protected by a mask)
+        run:  echo "the secret number is ${{ steps.sets-a-secret.outputs.secret-number }}"
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - name: Use the outputs from job1
+        run: |
+          echo "The output1 from job1 was ${{ needs.job1.outputs.output1 }}"
+          echo "The output2 from job1 was ${{ needs.job1.outputs.output2 }}"
