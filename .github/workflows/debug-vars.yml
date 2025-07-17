@@ -18,7 +18,6 @@ jobs:
         env:
           MY_VAR: "🟡 Step Level Value"
           MY_VAR2: "Step Level variable"
-          MY_VAR3: "Step Level variable"
         run: echo "MY_VAR is $MY_VAR" # What do we print?
 
       - name: Print the Variable again
@@ -37,6 +36,3 @@ jobs:
 
       - name: Print the final value for MY_VAR2
         run: echo "Final MY_VAR2 value is $MY_VAR2"
-
-      - name: Print the final value for MY_VAR3
-        run: echo "Final MY_VAR3 value is $MY_VAR3"
