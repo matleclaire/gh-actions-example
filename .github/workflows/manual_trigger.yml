@@ -1,0 +1,16 @@
+name: Manual dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      question:
+        description: 'Should i run this'
+        required: true
+        type: string
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Should i run this? ${{ inputs.question }}"
